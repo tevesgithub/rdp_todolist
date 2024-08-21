@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "310450925479",
+    "project_id": "fir-15aed",
+    "storage_bucket": "fir-15aed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310450925479:android:3c1d1ca9795b8cb44d5082",
+        "android_client_info": {
+          "package_name": "com.todolist.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6_OljR4PX0fGe6dbIZS3Ex-itoasKTjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
