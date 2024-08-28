@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  final List<String> tasks = <String>['Study for Exam', 'Do dishes.'];
+  final List<String> tasks = <String>[];
   final List<bool> checkboxes = List.generate(8, (index) => false);
   TextEditingController nameController = TextEditingController();
 
@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       tasks.insert(0, taskName);
+      checkboxes.insert(0, false);
     });
   }
 
@@ -75,6 +76,12 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/pattern.jpeg'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: [
             TableCalendar(
@@ -84,63 +91,121 @@ class _HomePageState extends State<HomePage> {
               firstDay: DateTime(2023),
               lastDay: DateTime(2025),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: tasks.length,
-              itemBuilder: (BuildContext context, int index) {
-                return SingleChildScrollView(
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 10.0),
-                    decoration: BoxDecoration(
-                      color: checkboxes[index]
-                          ? Colors.green.withOpacity(0.7)
-                          : Colors.blue.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(
-                            !checkboxes[index]
-                                ? Icons.manage_history
-                                : Icons.playlist_add_check_circle,
-                          ),
-                          SizedBox(width: 18),
-                          Text(
-                            '${tasks[index]}',
-                            style: checkboxes[index]
-                                ? TextStyle(
-                                    decoration: TextDecoration.lineThrough,
-                                    fontSize: 20,
-                                    color: Colors.black.withOpacity(0.5),
-                                  )
-                                : TextStyle(fontSize: 20),
-                          ),
-                          Row(
-                            children: [
-                              Checkbox(
-                                  value: checkboxes[index],
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      checkboxes[index] = newValue!;
-                                    });
-                                    //To-Do: updateTaskCompletionStatus()
-                                  }),
-                              const IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: null,
+            Container(
+              height: 200,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: tasks.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 3.0),
+                      decoration: BoxDecoration(
+                        color: checkboxes[index]
+                            ? Colors.yellow.withOpacity(0.7)
+                            : Colors.green.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(
+                              size: 44,
+                              !checkboxes[index]
+                                  ? Icons.manage_history
+                                  : Icons.playlist_add_check_circle,
+                            ),
+                            SizedBox(width: 18),
+                            Expanded(
+                              child: Text(
+                                '${tasks[index]}',
+                                style: checkboxes[index]
+                                    ? TextStyle(
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: 25,
+                                        color: Colors.black.withOpacity(0.5),
+                                      )
+                                    : TextStyle(fontSize: 25),
+                                textAlign: TextAlign.left,
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            Row(
+                              children: [
+                                Transform.scale(
+                                  scale: 1.4,
+                                  child: Checkbox(
+                                      value: checkboxes[index],
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          checkboxes[index] = newValue!;
+                                        });
+                                        //To-Do: updateTaskCompletionStatus()
+                                      }),
+                                ),
+                                const IconButton(
+                                  color: Colors.black,
+                                  iconSize: 30,
+                                  icon: Icon(Icons.delete),
+                                  onPressed: null,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: TextField(
+                      controller: nameController,
+                      maxLength: 20,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(30),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelText: 'Add To-Do List Item',
+                        labelStyle: TextStyle(
+                          fontSize: 26,
+                          color: Colors.green,
+                        ),
+                        hintText: 'Enter your task here',
+                        hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
                   ),
-                );
-              },
-            )
+                ),
+                const IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: null,
+                  //To-Do clearTextField
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(3.0),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStatePropertyAll(Color.fromARGB(255, 3, 217, 24)),
+                ),
+                child: Text(
+                  'Add To-Do List Item',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  addItemToList();
+                },
+              ),
+            ),
           ],
         ),
       ),
